@@ -3,7 +3,7 @@ const { Schema, model, Types } = require('mongoose');
 const validateEmail = function(email) {
     // used regexr to test this out with mutliple examples from https://en.wikipedia.org/wiki/Email_address#Local-part
     var re = /^((\S[^@])*|\w+)(\w+|\-|\-\w+)*@((\w+(\-*\w){1})|\w+)+\.\w{2,}?$/;
-    return re.test(email)
+    return re.test(email);
 };
 
 const UserSchema = new Schema(
@@ -18,8 +18,8 @@ const UserSchema = new Schema(
             type: String,
             required: true,
             unique: true,
-            validate: [validateEmail, 'Please fill a valid email address'],
-            match: [/^((\S[^@])*|\w+)(\w+|\-|\-\w+)*@((\w+(\-*\w){1})|\w+)+\.\w{2,}?$/, 'Please fill a valid email address']
+            validate: [validateEmail],
+            match: [/^((\S[^@])*|\w+)(\w+|\-|\-\w+)*@((\w+(\-*\w){1})|\w+)+\.\w{2,}?$/]
         },
         thoughts: [
             {
@@ -37,13 +37,15 @@ const UserSchema = new Schema(
     {
         toJSON: {
             virtuals: true
-        }
+        },
+        id: false
     }
 );
 
 // get total count of friends
 UserSchema.virtual('friendCount').get(function(){
-    return this.friends.reduce(total);
+    // returns the length of an array that nests the same schema the array is in
+    return (this.friends && this.friends.length) ? this.friends.length : 0
 });
 
 // create user model using schema

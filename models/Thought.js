@@ -61,7 +61,7 @@ const ThoughtSchema = new Schema(
 
 // get total count of reactions
 ThoughtSchema.virtual('reactionCount').get(function(){
-    return this.reactions.reduce(total);
+    return this.reactions.length;
 });
 
 // create thought model
